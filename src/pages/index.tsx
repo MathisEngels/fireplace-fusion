@@ -1,3 +1,4 @@
+import HomepageSlide from "@/components/Layout/HomepageSlide";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -26,7 +27,7 @@ export default function Homepage() {
   const getOpacityBasedOnHover = (index: number): string => (hoveredDiv === -1 ? "opacity-100" : hoveredDiv === index ? "opacity-100" : "opacity-50");
 
   return (
-    <>
+    <HomepageSlide>
       <main className="h-screen">
         <section className="flex flex-row h-full overflow-hidden">
           {items.map((item, index) => (
@@ -37,7 +38,7 @@ export default function Homepage() {
               onMouseEnter={() => setHoveredDiv(index)}
               onMouseLeave={() => setHoveredDiv(-1)}
             >
-              <Image src={item.imageSrc} alt={item.text} fill objectFit="cover" />
+              <Image src={item.imageSrc} alt={item.text} fill className="object-cover" />
               <p className="absolute left-1/2 bottom-1/4 -translate-x-1/2 text-4xl text-center font-semibold uppercase max-w-72">{item.text}</p>
             </Link>
           ))}
@@ -55,6 +56,6 @@ export default function Homepage() {
           bois, panneaux solaires et systèmes de climatisation, nous vous offrons des solutions énergétiques qui allient tradition, modernité et respect de l&apos;environnement.
         </div>
       </footer>
-    </>
+    </HomepageSlide>
   );
 }
