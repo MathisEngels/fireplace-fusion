@@ -21,3 +21,8 @@
     text-wrap: balance;
   }
 }
+
+body {
+    background-color: #230c0c;
+    color: #fce6e6
+}
