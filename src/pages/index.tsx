@@ -1,5 +1,5 @@
-import Footer from "@/components/Footer";
 import HomepageSlide from "@/components/Layout/HomepageSlide";
+import Footer from "@/components/ui/Footer";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";

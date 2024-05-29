@@ -1,56 +1,160 @@
-"use client";
 import { AnimatePresence, motion } from "framer-motion";
+import { Menu } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./accordion";
 
 export default function Header() {
   const [productOpen, setProductOpen] = useState(false);
-
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
-    <header className="bg-primary p-8" onMouseLeave={() => setProductOpen(false)}>
+    <header className="p-8" onMouseLeave={() => setProductOpen(false)}>
       <nav className="flex flex-row justify-between max-w-[1200px] m-auto">
         <Link href="/">Fireplace Fusion</Link>
-        <div className="flex flex-row gap-12">
-          <Link href="/" className="text-primary/60 hover:text-primary transition-all">
+        <div className="hidden lg:flex flex-row gap-12">
+          <Link href="/" className="text-primary/50 hover:text-white transition-all">
             Accueil
           </Link>
-          <p className="text-primary/60 hover:text-primary transition-all cursor-pointer" onClick={() => setProductOpen(!productOpen)}>
+          <p className="text-primary/50 hover:text-white transition-all cursor-pointer" onClick={() => setProductOpen(!productOpen)}>
             Produits
           </p>
-          <Link href="/" className="text-primary/60 hover:text-primary transition-all">
+          <Link href="/about" className="text-primary/50 hover:text-white transition-all">
             A propos
           </Link>
-          <Link href="/" className="text-primary/60 hover:text-primary transition-all">
+          <Link href="/contact" className="text-primary/50 hover:text-white transition-all">
             Contact
           </Link>
         </div>
+        <Menu className="lg:hidden cursor-pointer" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} />
       </nav>
-      <AnimatePresence mode="wait">{productOpen && <DropdownMenu />}</AnimatePresence>
+      <AnimatePresence>
+        {productOpen && <DropdownMenu />}
+        {mobileMenuOpen && <MobileDropdownMenu />}
+      </AnimatePresence>
     </header>
   );
 }
 
+const dropdownMenuItems = [
+  {
+    title: "Cheminées et poêles",
+    link: "/cheminees-et-poeles",
+    child: [
+      {
+        title: "Cheminées",
+        items: ["Cheminées à foyer ouvert", "Insert"],
+      },
+      {
+        title: "Poêles",
+        items: ["Poêle à bûches", "Poêle à granulés"],
+      },
+      {
+        title: "Accessoires",
+        items: ["Entretien et nettoyage", "Outils pour cheminées"],
+      },
+    ],
+    video: 371706661,
+    videoText: "Prendre un RDV",
+  },
+  {
+    title: "Climatisation",
+    link: "/climatisation",
+    child: [
+      {
+        title: "Climatisation",
+        items: ["Modèles", "Entretien"],
+      },
+      {
+        title: "Accessoires",
+        items: ["Filtre à air", "Thermostats intelligents"],
+      },
+    ],
+    video: 1158065,
+    videoText: "Obtenir un devis gratuit",
+  },
+  {
+    title: "Panneaux solaires",
+    link: "/panneaux-solaires",
+    child: [
+      {
+        title: "Panneaux photovoltaïques",
+        items: ["Modèles", "Entretien et Réparation"],
+      },
+      {
+        title: "Accessoires",
+        items: ["Systèmes de suivi solaire", "Onduleurs solaires", "Batteries de stockage"],
+      },
+    ],
+    video: 300644367,
+    videoText: "Prendre un RDV",
+  },
+];
+
+const MobileDropdownMenu = () => {
+  return (
+    <motion.nav
+      className="lg:hidden"
+      initial={{
+        height: 0,
+      }}
+      animate={{
+        height: "auto",
+      }}
+      exit={{
+        height: 0,
+        transition: {
+          delay: 0.25,
+        },
+      }}
+    >
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { delay: 0 } }} transition={{ delay: 0.25 }}>
+        <Link href="/" className="font-medium hover:underline block py-4 border-b pt-8">
+          Accueil
+        </Link>
+        <Link href="/contact" className="font-medium hover:underline block py-4 border-b">
+          Contact
+        </Link>
+        <Accordion type="single" collapsible>
+          {dropdownMenuItems.map((parent, index) => {
+            return (
+              <AccordionItem key={index} value={parent.title}>
+                <AccordionTrigger>{parent.title}</AccordionTrigger>
+                <AccordionContent className="flex flex-col gap-4">
+                  {parent.child.map((child, index) => {
+                    return (
+                      <div key={index}>
+                        <h4 className="font-normal underline">{child.title}</h4>
+                        <div className="flex flex-col gap-1 mt-2">
+                          {child.items.map((item, index) => {
+                            return (
+                              <Link key={index} href={parent.link} className="text-primary/50 hover:text-white transition-all">
+                                {item}
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </AccordionContent>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
+        <Link href="/about" className="font-medium hover:underline block py-4">
+          A propos
+        </Link>
+      </motion.div>
+    </motion.nav>
+  );
+};
+
 const DropdownMenu = () => {
   const [selectedTab, setSelectedTab] = useState<null | number>(0);
 
-  const TABS = [
-    {
-      title: "Cheminées et poêles",
-      Component: ChemineesEtPoeles,
-    },
-    {
-      title: "Climatisation",
-      Component: Climatisation,
-    },
-    {
-      title: "Panneaux solaires",
-      Component: PanneauxSolaires,
-    },
-  ];
-
   return (
-    <motion.div
-      className="bg-primary/50"
+    <motion.nav
+      className="bg-secondary/50 hidden lg:block"
       initial={{
         height: 0,
       }}
@@ -65,13 +169,13 @@ const DropdownMenu = () => {
       }}
     >
       <div className="flex max-w-[1200px] m-auto pt-8 px-2 h-full">
-        <motion.div className="flex flex-col" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { delay: 0 } }} transition={{ delay: 0.25 }}>
+        <motion.div className="flex flex-col text-nowrap" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { delay: 0 } }} transition={{ delay: 0.25 }}>
           <TabHighlighter selectedTab={selectedTab} />
-          <Tabs tabs={TABS} setSelectedTab={setSelectedTab} />
+          <Tabs setSelectedTab={setSelectedTab} />
         </motion.div>
-        <Content tabs={TABS} selectedTab={selectedTab} />
+        <Content selectedTab={selectedTab} />
       </div>
-    </motion.div>
+    </motion.nav>
   );
 };
 
@@ -94,34 +198,40 @@ const TabHighlighter = ({ selectedTab }: { selectedTab: number | null }) => {
     }
   }, [selectedTab]);
 
-  return <motion.div className="bg-secondary absolute rounded-l-md" animate={{ width, top, height }} />;
+  return <motion.div className="bg-primary absolute rounded-l-md" animate={{ width, top, height }} />;
 };
 
-const Tabs = ({ tabs, setSelectedTab }: { tabs: { title: string; Component: () => JSX.Element }[]; setSelectedTab: (index: number | null) => void }) => {
-  return tabs.map((item, index) => (
-    <p key={index} id={`tab-${index}`} className={`cursor-default p-2 z-10`} onMouseEnter={() => setSelectedTab(index)}>
-      {item.title}
-    </p>
-  ));
+const Tabs = ({ setSelectedTab }: { setSelectedTab: (index: number | null) => void }) => {
+  return dropdownMenuItems.map((parent, index) => {
+    return (
+      <p key={index} id={`tab-${index}`} className="cursor-default p-2 z-10" onMouseEnter={() => setSelectedTab(index)}>
+        {parent.title}
+      </p>
+    );
+  });
 };
 
-const Content = ({ tabs, selectedTab }: { tabs: { title: string; Component: () => JSX.Element }[]; selectedTab: number | null }) => {
+const Content = ({ selectedTab }: { selectedTab: number | null }) => {
   return (
     <motion.div
-      className={`transition-all p-2 rounded-md bg-secondary ${selectedTab === 0 ? "rounded-tl-none" : ""}`}
+      className={`transition-all p-2 rounded-md bg-primary h-full overflow-x-clip ${selectedTab === 0 ? "rounded-tl-none" : ""}`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { delay: 0 } }}
       transition={{ delay: 0.25 }}
     >
-      {tabs.map(
-        (item, index) =>
+      {dropdownMenuItems.map((parent, index) => {
+        return (
           selectedTab === index && (
-            <div key={index} className="h-full">
-              <item.Component />
-            </div>
+            <ContentContainer key={index}>
+              {parent.child.map((child, index) => {
+                return <ContentItemText key={index} title={child.title} items={child.items} link={parent.link} delay={0.5 + index * 0.25} />;
+              })}
+              {parent.video && <ContentItemVideo videoId={parent.video} text={parent.videoText} delay={0.5 + parent.child.length * 0.25} />}
+            </ContentContainer>
           )
-      )}
+        );
+      })}
     </motion.div>
   );
 };
@@ -169,39 +279,5 @@ const ContentItemVideo = ({ videoId, text, delay }: { videoId: number; text: str
         <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">{text}</p>
       </Link>
     </motion.div>
-  );
-};
-
-const ChemineesEtPoeles = () => {
-  const link = "/cheminees-et-poeles";
-  return (
-    <ContentContainer>
-      <ContentItemText title={"Cheminées"} items={["Cheminées à foyer ouvert", "Insert"]} link={link} delay={0.5} />
-      <ContentItemText title={"Poêles"} items={["Poêle à bûches", "Poêle à granulés"]} link={link} delay={0.75} />
-      <ContentItemText title={"Accessoires"} items={["Entretien et nettoyage", "Outils pour cheminées"]} link={link} delay={1} />
-      <ContentItemVideo videoId={371706661} text={"Prendre un RDV"} delay={1.25} />
-    </ContentContainer>
-  );
-};
-
-const Climatisation = () => {
-  const link = "/climatisation";
-  return (
-    <ContentContainer>
-      <ContentItemText title={"Climatisation"} items={["Modèles", "Entretien"]} link={link} delay={0.5} />
-      <ContentItemText title={"Accessoires"} items={["Filtre à air", "Thermostats intelligents"]} link={link} delay={0.75} />
-      <ContentItemVideo videoId={1158065} text={"Obtenir un devis gratuit"} delay={1} />
-    </ContentContainer>
-  );
-};
-
-const PanneauxSolaires = () => {
-  const link = "/panneaux-solaires";
-  return (
-    <ContentContainer>
-      <ContentItemText title={"Panneaux photovoltaïques"} items={["Modèles", "Entretien et Réparation"]} link={link} delay={0.5} />
-      <ContentItemText title={"Accessoires"} items={["Systèmes de suivi solaire", "Onduleurs solaires", "Batteries de stockage"]} link={link} delay={0.75} />
-      <ContentItemVideo videoId={300644367} text={"Prendre un RDV"} delay={1} />
-    </ContentContainer>
   );
 };
