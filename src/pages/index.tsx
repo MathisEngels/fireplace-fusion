@@ -1,4 +1,4 @@
-import HomepageSlide from "@/components/Layout/HomepageSlide";
+import Slide from "@/components/Layout/Slide";
 import Footer from "@/components/ui/Footer";
 import Image from "next/image";
 import Link from "next/link";
@@ -28,7 +28,7 @@ export default function Homepage() {
   const getOpacityBasedOnHover = (index: number): string => (hoveredDiv === -1 ? "opacity-100" : hoveredDiv === index ? "opacity-100" : "opacity-50");
 
   return (
-    <HomepageSlide>
+    <Slide text="Fireplace Fusion" textEffect={"fadeFromBehind"} delay={1.5}>
       <main className="h-screen">
         <section className="flex flex-col md:flex-row h-full overflow-hidden">
           {items.map((item, index) => (
@@ -46,6 +46,6 @@ export default function Homepage() {
         </section>
       </main>
       <Footer />
-    </HomepageSlide>
+    </Slide>
   );
 }
