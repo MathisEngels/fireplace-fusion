@@ -30,12 +30,12 @@ export default function Homepage() {
   return (
     <HomepageSlide>
       <main className="h-screen">
-        <section className="flex flex-row h-full overflow-hidden">
+        <section className="flex flex-col md:flex-row h-full overflow-hidden">
           {items.map((item, index) => (
             <Link
               key={index}
               href={item.href}
-              className={`relative flex-grow transition-all duration-700 hover:flex-grow-[1.5] h-full ${getOpacityBasedOnHover(index)}`}
+              className={`relative flex-grow transition-all duration-700 hover:flex-shrink-[0.5] md:hover:flex-grow-[1.5] h-full ${getOpacityBasedOnHover(index)}`}
               onMouseEnter={() => setHoveredDiv(index)}
               onMouseLeave={() => setHoveredDiv(-1)}
             >
