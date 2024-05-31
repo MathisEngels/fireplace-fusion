@@ -9,7 +9,7 @@ export default function Homepage() {
 
   const items = [
     {
-      href: "/cheminees",
+      href: "/cheminees-et-poeles",
       imageSrc: "/cheminees.jpeg",
       text: "Cheminées et Poêles",
     },
