@@ -14,7 +14,7 @@ export default function Slide({ children, text, delay = 0.75, textEffect = "fade
   const router = useRouter();
   const routeMap = {
     "/": "Fireplace Fusion",
-    "/cheminees": "Cheminees et Poêles",
+    "/cheminees-et-poeles": "Cheminees et Poêles",
     "/poeles": "Poêles",
     "/accessoires": "Accessoires",
     "/contact": "Contact",
